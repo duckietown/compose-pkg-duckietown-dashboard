@@ -1,5 +1,32 @@
 {
     "type": "object",
     "details": "Configuration",
-    "_data": {}
+    "_data": {
+        "diagnostics": {
+            "type": "object",
+            "details": "Configuration of the Diagnostics tool page",
+            "_data": {
+                "database_hostname": {
+                    "details": "The hostname of the instance of \\compose\\ hosting the database",
+                    "type": "text",
+                    "default": ""
+                },
+                "database_name": {
+                    "details": "The name of the database containing the diagnostics logs",
+                    "type": "text",
+                    "default": ""
+                },
+                "app_id": {
+                    "details": "The 'App ID' of the app used to access the logs database",
+                    "type": "text",
+                    "default": ""
+                },
+                "app_secret": {
+                    "details": "The 'App Secret Key' of the app used to access the logs database",
+                    "type": "text",
+                    "default": ""
+                }
+            }
+        }
+    }
 }

@@ -1,9 +1,16 @@
 {
-    "name": "Template",
-    "description": "This is a \\compose\\ template package.",
+    "name": "Duckietown Dashboard",
+    "description": "Provides tools and pages for the public Duckietown Dashboard",
+    "core": {
+        "namespace": "duckietown_dashboard",
+        "file": "DuckietownDashboard.php",
+        "class": "DuckietownDashboard"
+    },
     "dependencies": {
         "system-packages": [],
-        "packages": []
+        "packages": [
+            "duckietown"
+        ]
     },
     "compatibility": {
         "compose": {

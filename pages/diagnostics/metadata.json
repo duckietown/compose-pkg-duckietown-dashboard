@@ -1,14 +1,14 @@
 {
-    "name" : "Example Page",
-    "package" : "template-compose-pkg",
+    "name" : "Diagnostics",
+    "package" : "duckietown_dashboard",
     "menu_entry" : {
         "order" : 0,
         "icon" : {
             "class" : "fa",
-            "name" : "file-o"
+            "name" : "heartbeat"
         },
         "responsive" : {
-            "priority" : 1
+            "priority" : 35
         },
         "exclude_roles" : []
     },
