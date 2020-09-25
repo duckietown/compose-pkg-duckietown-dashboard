@@ -1,5 +1,5 @@
 {
-    "name": "Duckietown Dashboard",
+    "name": "Duckietown - Dashboard",
     "description": "Provides tools and pages for the public Duckietown Dashboard",
     "core": {
         "namespace": "duckietown_dashboard",
