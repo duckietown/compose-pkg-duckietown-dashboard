@@ -2,8 +2,8 @@
 use \system\classes\Core;
 use \system\classes\Configuration;
 
-$logs_db_host = Core::getSetting('diagnostics/database_host', 'duckietown_dashboard');
-$logs_db_name = Core::getSetting('diagnostics/database_name', 'duckietown_dashboard');
+$logs_db_host = Core::getSetting('database/hostname', 'duckietown_diagnostics');
+$logs_db_name = Core::getSetting('database/name', 'duckietown_diagnostics');
 
 if (strlen($logs_db_host) < 1) {
     $logs_db_host = Configuration::$BASE;
@@ -304,7 +304,7 @@ function _download_log(key){
     // compile log URL
     let log_url = '{0}/script.php?package={1}&script={2}&database={3}&key={4}'.format(
         "<?php echo $logs_db_host ?>",
-        "duckietown_dashboard",
+        "duckietown_diagnostics",
         "download_diagnostics_log",
         "<?php echo $logs_db_name ?>",
         key

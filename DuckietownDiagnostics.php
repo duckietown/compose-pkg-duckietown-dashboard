@@ -4,13 +4,13 @@
 # @Last modified by:   afdaniele
 
 
-namespace system\packages\duckietown_dashboard;
+namespace system\packages\duckietown_diagnostics;
 
 
 /**
  *   Module for the Duckietown Dashboard
  */
-class DuckietownDashboard {
+class DuckietownDiagnostics {
     
     private static $initialized = false;
     

@@ -1,10 +1,10 @@
 {
-    "name": "Duckietown - Dashboard",
+    "name": "Duckietown - Diagnostics",
     "description": "Provides tools and pages for the public Duckietown Dashboard",
     "core": {
-        "namespace": "duckietown_dashboard",
-        "file": "DuckietownDashboard.php",
-        "class": "DuckietownDashboard"
+        "namespace": "duckietown_diagnostics",
+        "file": "DuckietownDiagnostics.php",
+        "class": "DuckietownDiagnostics"
     },
     "dependencies": {
         "system-packages": [],

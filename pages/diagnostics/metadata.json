@@ -1,6 +1,6 @@
 {
     "name" : "Diagnostics",
-    "package" : "duckietown_dashboard",
+    "package" : "duckietown_diagnostics",
     "menu_entry" : {
         "order" : 0,
         "icon" : {

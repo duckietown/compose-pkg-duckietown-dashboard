@@ -3,10 +3,10 @@ use \system\classes\Core;
 
 $LOGS_VERSION = "v1";
 
-$logs_db_host = Core::getSetting('diagnostics/database_hostname', 'duckietown_dashboard');
-$logs_db_name = Core::getSetting('diagnostics/database_name', 'duckietown_dashboard');
-$db_app_id = Core::getSetting('diagnostics/app_id', 'duckietown_dashboard');
-$db_app_secret = Core::getSetting('diagnostics/app_secret', 'duckietown_dashboard');
+$logs_db_host = Core::getSetting('database/hostname', 'duckietown_diagnostics');
+$logs_db_name = Core::getSetting('database/name', 'duckietown_diagnostics');
+$db_app_id = Core::getSetting('authentication/app_id', 'duckietown_diagnostics');
+$db_app_secret = Core::getSetting('authentication/app_secret', 'duckietown_diagnostics');
 
 $api_info = [];
 if (strlen($logs_db_host) > 0) {

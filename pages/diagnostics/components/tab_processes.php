@@ -29,11 +29,11 @@ $_leaves_only = True;
 <hr>
 
 <script
-    src="<?php echo Core::getJSscriptURL('bootstrap-slider.min.js', 'duckietown_dashboard') ?>"
+    src="<?php echo Core::getJSscriptURL('bootstrap-slider.min.js', 'duckietown_diagnostics') ?>"
     type="text/javascript">
 </script>
 <link
-    href="<?php echo Core::getCSSstylesheetURL('bootstrap-slider.min.css', 'duckietown_dashboard') ?>"
+    href="<?php echo Core::getCSSstylesheetURL('bootstrap-slider.min.css', 'duckietown_diagnostics') ?>"
     rel="stylesheet"
 >
 
