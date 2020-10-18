@@ -1,6 +1,6 @@
 {
     "name": "Duckietown - Diagnostics",
-    "description": "Provides tools and pages for the public Duckietown Dashboard",
+    "description": "Provides tools and pages for managing the Duckietown Device Diagnostics Service (D3S) backend.",
     "core": {
         "namespace": "duckietown_diagnostics",
         "file": "DuckietownDiagnostics.php",
