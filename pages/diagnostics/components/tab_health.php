@@ -5,13 +5,16 @@ _logs_print_table_structure();
 Keys used from Log:
 
     health:
+        time
         status
         temp
         frequency
         volts
             ram
             core
-        time
+        battery
+            cell_voltage
+            current
 
 */
 ?>
@@ -39,6 +42,14 @@ Keys used from Log:
     <h4>RAM Voltage (V)</h4>
     <div id="_logs_tab_health_ram_voltage">
     </div>
+    <br/><br/>
+    <h4>Battery Cell Voltage (V)</h4>
+    <div id="_logs_tab_health_battery_cell_voltage">
+    </div>
+    <br/><br/>
+    <h4>Battery Output Current (A)</h4>
+    <div id="_logs_tab_health_battery_current">
+    </div>
 </div>
 
 
@@ -50,6 +61,8 @@ function _tab_health_render_logs(){
     let cpu_freq_datasets = [];
     let cpu_volt_datasets = [];
     let ram_volt_datasets = [];
+    let battery_volt_datasets = [];
+    let battery_current_datasets = [];
     let seek = '/health';
     let status_to_val = {'ok': 0, 'warning': 1, 'error': 2};
     let val_to_status = ['ok', 'warning', 'error'];
@@ -127,6 +140,30 @@ function _tab_health_render_logs(){
         ram_volt_datasets.push(get_chart_dataset({
             label: log_legend_entry,
             data: ram_volt,
+            color: color
+        }));
+        // Battery Cell voltage
+        let battery_cell_volt = log_data.map(function(e){
+            return {
+                x: parseInt(e.time - start_time),
+                y: e.battery.cell_voltage.toFixed(2)
+            };
+        });
+        battery_volt_datasets.push(get_chart_dataset({
+            label: log_legend_entry,
+            data: battery_cell_volt,
+            color: color
+        }));
+        // Battery Output current
+        let battery_current = log_data.map(function(e){
+            return {
+                x: parseInt(e.time - start_time),
+                y: e.battery.current.toFixed(2)
+            };
+        });
+        battery_current_datasets.push(get_chart_dataset({
+            label: log_legend_entry,
+            data: battery_current,
             color: color
         }));
     });
@@ -319,6 +356,78 @@ function _tab_health_render_logs(){
             }
         }
     });
+    // add battery voltage canvas to tab
+    let battery_volt_canvas = get_empty_canvas();
+    $('#_logs_tab_health #_logs_tab_health_battery_cell_voltage').append(battery_volt_canvas);
+    // render Battery Cell voltage
+    new Chart(battery_volt_canvas, {
+        type: 'line',
+        data: {
+            labels: window._DIAGNOSTICS_LOGS_X_RANGE,
+            datasets: battery_volt_datasets
+        },
+        options: {
+            scales: {
+                yAxes: [
+                    {
+                        ticks: {
+                            callback: function(label) {
+                                return label.toFixed(1)+' V';
+                            },
+                            min: 0.0,
+                            max: 7.0
+                        },
+                        gridLines: {
+                            display: false
+                        }
+                    }
+                ],
+                xAxes: [
+                    {
+                        ticks: {
+                            callback: format_time
+                        }
+                    }
+                ]
+            }
+        }
+    });
+    // add battery voltage canvas to tab
+    let battery_current_canvas = get_empty_canvas();
+    $('#_logs_tab_health #_logs_tab_health_battery_current').append(battery_current_canvas);
+    // render Battery Cell voltage
+    new Chart(battery_current_canvas, {
+        type: 'line',
+        data: {
+            labels: window._DIAGNOSTICS_LOGS_X_RANGE,
+            datasets: battery_current_datasets
+        },
+        options: {
+            scales: {
+                yAxes: [
+                    {
+                        ticks: {
+                            callback: function(label) {
+                                return label.toFixed(1)+' A';
+                            },
+                            min: -4.0,
+                            max: 4.0
+                        },
+                        gridLines: {
+                            display: false
+                        }
+                    }
+                ],
+                xAxes: [
+                    {
+                        ticks: {
+                            callback: format_time
+                        }
+                    }
+                ]
+            }
+        }
+    });
 }
 
 // this gets executed when the tab gains focus
@@ -334,6 +443,8 @@ let _tab_health_on_hide = function(){
     $('#_logs_tab_health #_logs_tab_health_cpu_frequency').empty();
     $('#_logs_tab_health #_logs_tab_health_cpu_voltage').empty();
     $('#_logs_tab_health #_logs_tab_health_ram_voltage').empty();
+    $('#_logs_tab_health #_logs_tab_health_battery_cell_voltage').empty();
+    $('#_logs_tab_health #_logs_tab_health_battery_current').empty();
 };
 
 $('#_logs_tab_btns a[href="#health"]').on('shown.bs.tab', _tab_health_on_show);

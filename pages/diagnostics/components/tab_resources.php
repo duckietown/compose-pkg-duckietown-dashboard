@@ -9,9 +9,14 @@ Keys used from Log:
 
     health:
         time
-        cpu.percentage
-        memory.percentage
-        swap.percentage
+        cpu
+            percentage
+        memory
+            percentage
+        swap
+            percentage
+        battery
+            percentage
 
 */
 ?>
@@ -31,6 +36,10 @@ Keys used from Log:
     <h4>Swap Usage</h4>
     <div id="_logs_tab_resources_swap">
     </div>
+    <br/><br/>
+    <h4>Battery Level</h4>
+    <div id="_logs_tab_resources_batt">
+    </div>
 </div>
 
 
@@ -41,6 +50,7 @@ function _tab_resources_render_logs(){
     let pcpu_datasets = [];
     let pmem_datasets = [];
     let pswap_datasets = [];
+    let pbatt_datasets = [];
     get_listed_logs('_key').forEach(function(key){
         let color = get_log_info(key, '_color');
         let log_data = window._DIAGNOSTICS_LOGS_DATA[key][seek];
@@ -53,6 +63,7 @@ function _tab_resources_render_logs(){
         let pcpu = log_data.map(function(e){return {x: parseInt(e.time - start_time), y: e.cpu.percentage}});
         let pmem = log_data.map(function(e){return {x: parseInt(e.time - start_time), y: e.memory.percentage}});
         let pswap = log_data.map(function(e){return {x: parseInt(e.time - start_time), y: e.swap.percentage}});
+        let pbatt = log_data.map(function(e){return {x: parseInt(e.time - start_time), y: e.battery.percentage}});
         // ---
         pcpu_datasets.push(get_chart_dataset({
             label: log_legend_entry,
@@ -67,6 +78,11 @@ function _tab_resources_render_logs(){
         pswap_datasets.push(get_chart_dataset({
             label: log_legend_entry,
             data: pswap,
+            color: color
+        }));
+        pbatt_datasets.push(get_chart_dataset({
+            label: log_legend_entry,
+            data: pbatt,
             color: color
         }));
     });
@@ -178,6 +194,42 @@ function _tab_resources_render_logs(){
             }
         }
     });
+    // add BATTERY canvas to tab
+    let battery_canvas = get_empty_canvas();
+    $('#_logs_tab_resources #_logs_tab_resources_batt').append(battery_canvas);
+    // render RAM usage
+    new Chart(battery_canvas, {
+        type: 'line',
+        data: {
+            labels: window._DIAGNOSTICS_LOGS_X_RANGE,
+            datasets: pbatt_datasets
+        },
+        options: {
+            scales: {
+                yAxes: [
+                    {
+                        ticks: {
+                            callback: function(label) {
+                                return label.toFixed(0)+' %';
+                            },
+                            min: 0,
+                            max: 100
+                        },
+                        gridLines: {
+                            display: false
+                        }
+                    }
+                ],
+                xAxes: [
+                    {
+                        ticks: {
+                            callback: format_time
+                        }
+                    }
+                ]
+            }
+        }
+    });
 }
 
 // this gets executed when the tab gains focus
@@ -191,6 +243,7 @@ let _tab_resources_on_hide = function(){
     $('#_logs_tab_resources #_logs_tab_resources_cpu').empty();
     $('#_logs_tab_resources #_logs_tab_resources_ram').empty();
     $('#_logs_tab_resources #_logs_tab_resources_swap').empty();
+    $('#_logs_tab_resources #_logs_tab_resources_batt').empty();
 };
 
 $('#_logs_tab_btns a[href="#resources"]').on('shown.bs.tab', _tab_resources_on_show);
