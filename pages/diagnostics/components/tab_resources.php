@@ -6,13 +6,12 @@ Keys used from Log:
 
     general:
         time
-        duration
 
-    resources_stats:
+    health:
         time
-        cpu.pcpu
-        memory.pmem
-        swap.pswap
+        cpu.percentage
+        memory.percentage
+        swap.percentage
 
 */
 ?>
@@ -38,7 +37,7 @@ Keys used from Log:
 <script type="text/javascript">
 
 function _tab_resources_render_logs(){
-    let seek = '/resources_stats';
+    let seek = '/health';
     let pcpu_datasets = [];
     let pmem_datasets = [];
     let pswap_datasets = [];
@@ -51,9 +50,9 @@ function _tab_resources_render_logs(){
             window._DIAGNOSTICS_LOGS_DATA[key]['/general'].subgroup
         );
         // create datasets
-        let pcpu = log_data.map(function(e){return {x: parseInt(e.time - start_time), y: e.cpu.pcpu}});
-        let pmem = log_data.map(function(e){return {x: parseInt(e.time - start_time), y: e.memory.pmem}});
-        let pswap = log_data.map(function(e){return {x: parseInt(e.time - start_time), y: e.swap.pswap}});
+        let pcpu = log_data.map(function(e){return {x: parseInt(e.time - start_time), y: e.cpu.percentage}});
+        let pmem = log_data.map(function(e){return {x: parseInt(e.time - start_time), y: e.memory.percentage}});
+        let pswap = log_data.map(function(e){return {x: parseInt(e.time - start_time), y: e.swap.percentage}});
         // ---
         pcpu_datasets.push(get_chart_dataset({
             label: log_legend_entry,
@@ -183,7 +182,7 @@ function _tab_resources_render_logs(){
 
 // this gets executed when the tab gains focus
 let _tab_resources_on_show = function(){
-    let seek = '/resources_stats';
+    let seek = '/health';
     fetch_log_data(seek, null, _tab_resources_render_logs);
 };
 

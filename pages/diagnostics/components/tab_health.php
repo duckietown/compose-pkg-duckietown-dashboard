@@ -9,7 +9,7 @@ Keys used from Log:
         temp
         frequency
         volts
-            sdram_i
+            ram
             core
         time
 
@@ -87,8 +87,8 @@ function _tab_health_render_logs(){
         // CPU temperature
         let cpu_temp = log_data.map(function(e){return {
             x: parseInt(e.time - start_time),
-            y: ($.type(e.temp) === "string")?
-                parseFloat(e.temp.slice(0,-2)) : e.temp
+            y: ($.type(e.temperature) === "string")?
+                parseFloat(e.temperature.slice(0,-2)) : e.temperature
         }});
         cpu_temp_datasets.push(get_chart_dataset({
             label: log_legend_entry,
@@ -97,20 +97,10 @@ function _tab_health_render_logs(){
         }));
         // CPU frequency
         let cpu_frequency = log_data.map(function(e){
-            // this is necessary, old logs do not have the frequency
-            if (e.hasOwnProperty('frequency')) {
-                return {
-                    x: parseInt(e.time - start_time),
-                    y: ($.type(e.frequency) === "string")?
-                        (parseFloat(e.frequency) / (10 ** 9)).toFixed(4) :
-                        (e.frequency / (10 ** 9)).toFixed(4)
-                };
-            } else {
-                return {
-                    x: parseInt(e.time - start_time),
-                    y: 0.0
-                };
-            }
+            return {
+                x: parseInt(e.time - start_time),
+                y: (e.cpu.frequency.current / (10 ** 9)).toFixed(4)
+            };
         });
         cpu_freq_datasets.push(get_chart_dataset({
             label: log_legend_entry,
@@ -131,8 +121,8 @@ function _tab_health_render_logs(){
         // RAM voltage
         let ram_volt = log_data.map(function(e){return {
             x: parseInt(e.time - start_time),
-            y: ($.type(e.volts.sdram_i) === "string")?
-                parseFloat(e.volts.sdram_i.slice(0,-1)) : e.volts.sdram_i
+            y: ($.type(e.volts.ram) === "string")?
+                parseFloat(e.volts.ram.slice(0,-1)) : e.volts.ram
         }});
         ram_volt_datasets.push(get_chart_dataset({
             label: log_legend_entry,
@@ -202,7 +192,7 @@ function _tab_health_render_logs(){
                             callback: function(label) {
                                 return label.toFixed(0)+' \'C';
                             },
-                            min: 30,
+                            min: 20,
                             max: 90
                         },
                         gridLines: {

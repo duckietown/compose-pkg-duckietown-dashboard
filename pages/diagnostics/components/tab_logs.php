@@ -93,6 +93,11 @@ function _logs_print_table_structure($id = null, $read_only = true) {
           <th class="col-md-2 text-center">Actions</th>
         </tr>
     </table>
+    <br/>
+    <a href="#" onclick="_copy_table_config_link_to_clipboard()" style="float: right; margin-right: 20px">
+        <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
+        Copy link to this table configuration
+    </a>
     <?php
 }
 
@@ -414,6 +419,15 @@ function _update_duration(){
             0, window._DIAGNOSTICS_LOGS_DURATION, window._DIAGNOSTICS_LOGS_X_RESOLUTION
         );
     });
+}
+
+
+function _copy_table_config_link_to_clipboard() {
+    let page_url = getCurrentAbsoluteURL(true, true, true, false, false);
+    let listed_logs = get_listed_logs('_key');
+    let experiment_keys = listed_logs.join(',');
+    let full_url = "{0}?keys={1}".format(page_url, experiment_keys);
+    copyToClipboard(full_url);
 }
 
 $(document).on('ready', function(){

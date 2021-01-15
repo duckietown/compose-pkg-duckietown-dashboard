@@ -1,8 +1,7 @@
 <?php
 use \system\classes\Core;
 
-$LOGS_VERSION = "v1";
-
+$logs_version = "2.0";
 $logs_db_host = Core::getSetting('database/hostname', 'duckietown_diagnostics');
 $logs_db_name = Core::getSetting('database/name', 'duckietown_diagnostics');
 $db_app_id = Core::getSetting('authentication/app_id', 'duckietown_diagnostics');
@@ -18,6 +17,7 @@ if (strlen($db_app_id) > 0 && strlen($db_app_secret) > 0) {
         'app_secret' => $db_app_secret
     ];
 }
+$LOGS_VERSION = sprintf("v%s", str_replace('.', '_', $logs_version));
 ?>
 
 <style type="text/css">
@@ -29,7 +29,7 @@ if (strlen($db_app_id) > 0 && strlen($db_app_secret) > 0) {
 <div class="col-md-12" style="margin-bottom: 30px;">
     <div style="width: 970px; margin: auto">
         <h2 class="page-title"></h2>
-    
+        
         <span style="float: right; font-size: 12pt">
             Wide mode
             <label for="_logs_wide_mode"></label>
