@@ -24,6 +24,7 @@ Keys used from Log:
 
 $_condense_plots = True;
 $_leaves_only = True;
+$_show_all = False;
 ?>
 
 <hr>
@@ -115,13 +116,16 @@ $_leaves_only = True;
                 <td>
                     <div class="col-md-6">
                         <dl class="dl-horizontal">
-                            <dt style="padding-top: 6px">Command</dt>
+                            <dt>Show all processes</dt>
                             <dd>
-                                <div class="input-group">
-                                    <span class="input-group-addon" id="basic-addon1"> > </span>
-                                    <input type="text" id="_logs_tab_processes_filter_command"
-                                           class="form-control" placeholder="Command contains...">
-                                </div>
+                                <input type="checkbox"
+                                       data-toggle="toggle"
+                                       data-onstyle="primary"
+                                       data-class="fast"
+                                       data-size="small"
+                                       id="_logs_tab_processes_filter_show_all"
+                                    <?php echo ($_show_all) ? 'checked' : '' ?>
+                                >
                             </dd>
                         </dl>
                     </div>
@@ -138,6 +142,22 @@ $_leaves_only = True;
                                        id="_logs_tab_processes_filter_leaves_only"
                                     <?php echo ($_leaves_only) ? 'checked' : '' ?>
                                 >
+                            </dd>
+                        </dl>
+                    </div>
+                </td>
+            </tr>
+            <tr style="height: 70px; vertical-align: top">
+                <td>
+                    <div class="col-md-12">
+                        <dl class="dl-horizontal">
+                            <dt style="padding-top: 6px">Command</dt>
+                            <dd>
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon1"> > </span>
+                                    <input type="text" id="_logs_tab_processes_filter_command"
+                                           class="form-control" placeholder="Command contains...">
+                                </div>
                             </dd>
                         </dl>
                     </div>
@@ -174,6 +194,9 @@ $_leaves_only = True;
 
 
 <script type="text/javascript">
+
+let _LOGS_PROCESS_SELECTOR = "/process_stats";
+
 let _LOGS_PROCESS_BLOCK_TEMPLATE = `
 <div class="panel panel-default">
   {panel_heading}
@@ -272,6 +295,7 @@ let _LOG_PROCESS_FILTER_DEFAULT_VALUES = {
   nthreads: [0, 50],
   command: "",
   leaves_only: true,
+  show_all: false,
   condense_plots: true,
   coverage: [0.1, 1.0]
 };
@@ -294,7 +318,7 @@ function _format_command(cmd){
 }
 
 function _tab_processes_render_single_log(key, seek, log_i){
-    if (seek !== '/process_stats') return;
+    if (seek !== _LOGS_PROCESS_SELECTOR) return;
     let color = get_log_info(key, '_color');
     let log_data = window._DIAGNOSTICS_LOGS_DATA[key][seek];
     let log_containers = window._DIAGNOSTICS_LOGS_DATA[key]['/containers'];
@@ -641,6 +665,7 @@ function update_filter_inputs(settings){
     // update switches
     $('#_logs_tab_processes_filter_leaves_only').bootstrapToggle(settings.leaves_only? 'on' : 'off');
     $('#_logs_tab_processes_filter_condense_plots').bootstrapToggle(settings.condense_plots? 'on' : 'off');
+    $('#_logs_tab_processes_filter_show_all').bootstrapToggle(settings.show_all? 'on' : 'off');
     // update sliders
     $("input#_logs_tab_processes_filter_pcpu").slider('setValue', settings.pcpu);
     $("input#_logs_tab_processes_filter_pmem").slider('setValue', settings.pmem);
@@ -651,8 +676,10 @@ function update_filter_inputs(settings){
 let _tab_processes_on_show = function(){
     // update filter inputs
     update_filter_inputs(_LOG_PROCESS_FILTER_VALUES);
+    // choose selector
+    _LOGS_PROCESS_SELECTOR = (_LOG_PROCESS_FILTER_VALUES.show_all? '/all_' : '/') + 'process_stats';
     // fetch data
-    let seek = ['/containers', '/process_stats'];
+    let seek = ['/containers', _LOGS_PROCESS_SELECTOR];
     fetch_log_data(seek, _tab_processes_render_single_log, hidePleaseWait);
 };
 
@@ -733,6 +760,7 @@ $('#_logs_tab_processes_filter_apply').on('click', function(){
           nthreads: $('input#_logs_tab_processes_filter_nthreads').slider('getValue'),
           command: $('#_logs_tab_processes_filter_command').val(),
           leaves_only: $('#_logs_tab_processes_filter_leaves_only').get(0).checked,
+          show_all: $('#_logs_tab_processes_filter_show_all').get(0).checked,
           condense_plots: $('#_logs_tab_processes_filter_condense_plots').get(0).checked,
         };
         // store new filter values
@@ -758,6 +786,8 @@ $(document).on('ready', function(){
     let command = filters.command || _LOG_PROCESS_FILTER_DEFAULT_VALUES.command;
     let leaves_only = (filters.leaves_only !== undefined)? filters.leaves_only :
         _LOG_PROCESS_FILTER_DEFAULT_VALUES.leaves_only;
+    let show_all = (filters.show_all !== undefined)? filters.show_all :
+        _LOG_PROCESS_FILTER_DEFAULT_VALUES.show_all;
     let condense_plots = (filters.condense_plots !== undefined)? filters.condense_plots :
         _LOG_PROCESS_FILTER_DEFAULT_VALUES.condense_plots;
     let coverage = filters.coverage || _LOG_PROCESS_FILTER_DEFAULT_VALUES.coverage;
@@ -768,6 +798,7 @@ $(document).on('ready', function(){
         nthreads: nthreads,
         command: command,
         leaves_only: leaves_only,
+        show_all: show_all,
         condense_plots: condense_plots,
         coverage: coverage
     };
