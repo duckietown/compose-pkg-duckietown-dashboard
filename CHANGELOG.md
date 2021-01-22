@@ -1,3 +1,6 @@
+## 1.1.1 (January 21, 2021)
+  - added Show All option in the Processes tab
+
 ## 1.1.0 (January 21, 2021)
   - bumped minimum requirement
   - added renderers for battery level/cell_voltage/current
