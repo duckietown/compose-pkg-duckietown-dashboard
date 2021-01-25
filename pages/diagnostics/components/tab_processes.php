@@ -364,12 +364,16 @@ function _tab_processes_render_single_log(key, seek, log_i){
             append = true;
         }
         if (!data.hasOwnProperty(PID)) {
+            let container_name = _LOGS_PROCESS_SELECTOR.startsWith('/all_')?
+                "Not available with 'Show all processes'" :
+                log_containers[proc['container']];
+            // ---
             data[PID] = {
                 log: key,
                 log_i: log_i,
                 panel_color: condense_plots? 'rgba({0}, 0.4)'.format(color) : '',
                 command_color: condense_plots ? 'rgba({0}, 0.5)'.format(color) : '#eee',
-                container_name: log_containers[proc['container']],
+                container_name: container_name,
                 process_name: process_name,
                 process_name_str: process_name? '<strong>'+process_name+'</strong>' : '(check command below)',
                 process_name_str_plain: process_name || '(check command below)',
@@ -645,6 +649,7 @@ function _tab_processes_render_single_log(key, seek, log_i){
 
 function _find_process_name(command) {
     let parts = command.split(' ');
+    let process_name = null;
     // ROS node
     for (let i = 0; i < parts.length; i++){
         if (parts[i].startsWith('__name:='))
@@ -655,8 +660,19 @@ function _find_process_name(command) {
         if (parts[i].startsWith('/usr/bin/python') && i < parts.length - 1)
             return parts[i+1].split('/').slice(-1)[0];
     }
+    // binary
+    ['bin', 'sbin'].forEach(function (dir) {
+        if (process_name !== null) return;
+        if (parts[0].includes('/{0}/'.format(dir))) {
+            let parts2 = parts[0].split('/');
+            for (let j = 0; j < parts2.length; j++){
+                if (parts2[j] === dir && j < parts2.length - 1)
+                    process_name = parts2[j+1];
+            }
+        }
+    });
     // ---
-    return null;
+    return process_name;
 }
 
 function update_filter_inputs(settings){
