@@ -1,3 +1,6 @@
+## 1.1.2 (January 25, 2021)
+  - improved process grouping
+
 ## 1.1.1 (January 21, 2021)
   - added Show All option in the Processes tab
 
